@@ -33,7 +33,8 @@ graph TD
     %% Add Mermaid graph of the architecture here
 ```
 
-### Module Descriptions:
+### Module Descriptions
+
 - **`[path/to/module]`**: [Description of this core module.]
 
 ---
@@ -57,7 +58,7 @@ graph TD
 
 We enforce strict validation criteria. The current status is:
 
-1.  **Type Checks**: 
-2.  **Linting**: 
-3.  **Test Suites**: 
-4.  **Production Builds**: 
+1. **Type Checks**:
+2. **Linting**:
+3. **Test Suites**:
+4. **Production Builds**:

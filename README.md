@@ -17,7 +17,7 @@ A version-controlled file structure that synchronizes the agent's state:
 
 ## Repository Layout
 
-```
+```text
 CLAUDE.md                    # protocol entry point: Startup SOP, memory map, command index
 .claude/
   rules/core-directives.md   # operating discipline, loaded every session

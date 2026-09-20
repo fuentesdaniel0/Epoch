@@ -31,24 +31,36 @@ This file documents the active state, current configurations, code graph, and ve
 ```mermaid
 graph TD
     Root["/"]
-    Template["template/.agents/"]
-    RootAgents[".agents/"]
+    Claude["CLAUDE.md"]
+    Engine[".claude/ (rules, skills, settings)"]
+    Memory[".agents/memory/ (context, backlog, changelog)"]
+    Template["template/ (pristine CLAUDE.md + .claude + .agents/memory)"]
+    Scripts["scripts/ (sync-templates, create-workspace)"]
     Eval["EVALUATION.md"]
+    Root --> Claude
+    Root --> Engine
+    Root --> Memory
     Root --> Template
-    Root --> RootAgents
+    Root --> Scripts
     Root --> Eval
+    Template -. sync-templates.py .-> Claude
+    Template -. sync-templates.py .-> Engine
 ```
 
-### Module Descriptions:
-- **`template/.agents/`**: The pristine distribution folder containing rules, skills, and blank memory templates.
-- **`.agents/`**: The active memory system tracking the development of *this* repository itself.
-- **`EVALUATION.md`**: Behavioral test script for verifying AI agent compliance.
+### Module Descriptions
+
+- **`CLAUDE.md`**: Protocol entry point loaded every session: Startup SOP, memory map, command index.
+- **`.claude/`**: Claude Code-native engine. `rules/core-directives.md` (always loaded), `skills/{init,plan,milestone,checkpoint,scaffold-module}/SKILL.md`, `settings.json` (SessionStart hook).
+- **`.agents/memory/`**: Harness-neutral state for *this* repository's own development. Never overwritten by sync.
+- **`template/`**: Pristine source of truth mirroring the root layout, with blank memory templates (`protocol_version: 2.0`).
+- **`scripts/`**: `sync-templates.py` (template -> root, idempotent) and `create-workspace.py` (template -> new project + interview + git init).
+- **`EVALUATION.md`**: Six-phase behavioral test script for a fresh Claude Code session.
 
 ---
 
 ## Environment / Security Notes
 
-*   No secrets or cloud resources. Live harness config files (`.agents/settings.json`, `.agents/mcp_config.json`) are git-ignored; see `.agents/mcp_config.example.json`.
+- No secrets or cloud resources. Live harness config files (`.agents/settings.json`, `.agents/mcp_config.json`) are git-ignored; see `.agents/mcp_config.example.json`.
 
 ---
 
@@ -57,6 +69,9 @@ graph TD
 <!-- One shell command per line inside the fenced block. `/checkpoint` runs them in order from the repository root and stops at the first failure. Leave the block empty if verification is not configured. -->
 
 ```bash
+npx --yes markdownlint-cli2 "**/*.md" "#node_modules"
+python3 scripts/sync-templates.py
+git diff --quiet -- CLAUDE.md .claude
 ```
 
 ---
@@ -65,7 +80,7 @@ graph TD
 
 We enforce strict validation criteria. The current status is:
 
-1.  **Type Checks**: N/A
-2.  **Linting**: Clean Markdown.
-3.  **Test Suites**: N/A (behavioral evaluation only)
-4.  **Production Builds**: N/A
+1. **Type Checks**: N/A
+2. **Linting**: `markdownlint-cli2` clean (config in `.markdownlint-cli2.yaml`).
+3. **Test Suites**: N/A (behavioral evaluation only)
+4. **Production Builds**: N/A (sync idempotence checked: `sync-templates.py` then `git diff --quiet`)

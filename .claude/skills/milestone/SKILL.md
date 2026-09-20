@@ -13,6 +13,7 @@ Milestone to record: **$ARGUMENTS**
 If no description was given, ask the user for a one-line description, then stop and wait. Otherwise proceed without further questions.
 
 ## 1. Append to the changelog
+
 - `Read` `.agents/memory/changelog.md`.
 - Append a new entry at the end of the timeline (below the last entry, above nothing else) in this exact shape:
 
@@ -24,10 +25,12 @@ If no description was given, ask the user for a one-line description, then stop 
 Use today's date shown above. Keep the entry short; this is a marker, not a sprint narrative.
 
 ## 2. Optionally check off the roadmap item
+
 - `Grep` `.agents/memory/backlog.md` for a "High-Level Roadmap" feature whose text clearly matches the milestone description.
 - If exactly one unambiguous match exists, mark it `[x]`. If none or several match, leave the backlog untouched and mention that in your reply.
 
 ## 3. Commit (never push)
+
 - If the workspace is a git repository (`git rev-parse --is-inside-work-tree`):
   - `git add .agents/memory/changelog.md .agents/memory/backlog.md`
   - `git commit -m "chore(milestone): <description>"`
@@ -35,9 +38,11 @@ Use today's date shown above. Keep the entry short; this is a marker, not a spri
 - If it is not a git repository, skip the commit and say so.
 
 ## 4. Reply
+
 One short confirmation: the entry appended, whether a roadmap item was checked off, and the commit hash.
 
 ## Explicitly out of scope
+
 - Do **not** run any verification commands.
 - Do **not** interview the user about the next session.
 - Do **not** update the Session Focus, `context.md`, or migrate active backlog tasks.

@@ -12,42 +12,47 @@ This file outlines the upcoming milestones, roadmap, and individual feature task
 
 *This section dictates the immediate priority for the next AI agent session. It is populated during the `/checkpoint` wrap-up or via `/plan`.*
 
-- [ ] Prepare for v1.0 tag.
+- [ ] Prepare for v2.0 tag: run EVALUATION.md end-to-end in a fresh `claude` session against a `create-workspace.py` workspace, then tag.
 
 ---
 
 ## High-Level Roadmap
 
 ### Milestone 1: Template Separation (Completed)
-*   **Feature 1**: Isolate the pristine template into `template/.agents/`.
-*   **Feature 2**: Re-initialize the root `.agents/` to track repository development.
 
-### Milestone 2: Publish and Distribute
-*   [x] **Feature 1**: Generalize ADK agent template structure and environment configuration (embed `.agents/` memory, externalize metadata/location environment variables).
-*   [x] **Feature 2**: Implement template sync tool (`scripts/sync-templates.py`) to prevent rule/workflow drift.
-*   [x] **Feature 3**: Implement interactive agent bootstrapper CLI (`scripts/create-agent.py`) to automate project instantiation.
-*   [ ] **Feature 4**: Prepare for v1.0 tag.
+- **Feature 1**: Isolate the pristine template into `template/`.
+- **Feature 2**: Re-initialize the root memory to track repository development.
 
-### Milestone 3: ADK Agent Template & FastAPI Deployment (Completed)
-*   **Feature 1**: Design and scaffold ADK agent template directory with Epoch memory integration.
-*   **Feature 2**: Expose agent via standard FastAPI server and endpoints.
-*   **Feature 3**: Provide deployment configurations (Dockerfile, Cloud Run deployment commands, and setup guide).
+### Milestone 2: Tooling (Completed)
 
-### Milestone 4: Enable A2A Interoperability
-*   **Feature 1**: Wrap agent with `to_a2a()` wrapper and resolve `starlette` / `sse-starlette` dependency requirements.
-*   **Feature 2**: Configure public Agent Card endpoint at `/.well-known/agent-card.json`.
+- [x] **Feature 1**: Template sync tool (`scripts/sync-templates.py`) to prevent engine drift.
+- [x] **Feature 2**: Interactive workspace bootstrapper (`scripts/create-workspace.py`).
 
-### Milestone 5: Agent Factory & Calendar Advisor Agent Integration
-*   **Feature 1**: Establish an Agent Factory pattern to dynamically define, configure, and instantiate ADK-compatible agents.
-*   [x] **Feature 2**: Refactor and integrate the Calendar Advisor UI project logic as an autonomous agent registered with the factory.
+### Milestone 3: Claude Code Engine v2 (Completed)
+
+- [x] **Feature 1**: Port rules/workflows to `CLAUDE.md`, `.claude/rules/`, `.claude/skills/`.
+- [x] **Feature 2**: Add `/init` (read-only state report) and `/milestone` (cheap append+commit).
+- [x] **Feature 3**: Data-driven `/checkpoint` verification from `## Verification Commands`.
+- [x] **Feature 4**: Strip ADK runtime, deployment tooling, and live MCP configs.
+
+### Milestone 4: v2.0 Release
+
+- [ ] **Feature 1**: Walk `EVALUATION.md` in a fresh interactive `claude` session (Phases 1-6) and record results.
+- [ ] **Feature 2**: Tag `v2.0` and publish release notes.
+
+### Milestone 5: Multi-Harness Adapters (Post v2.0)
+
+- **Feature 1**: Thin engine ports (Cursor, Copilot, Antigravity) over the unchanged `.agents/memory/` state.
+- **Feature 2**: Optional domain packs (rules/skills bundles) installable into `.claude/`.
 
 ### Continuous Milestone: Meta-Planning & Agent Improvement
-*   **Feature 1**: Evaluate agent performance across workflows and refine `.agents/` constraints.
-*   **Feature 2**: Ideate new skills or interactive slash commands to augment autonomy.
 
+- **Feature 1**: Evaluate agent performance across skills and refine `.claude/` constraints.
+- **Feature 2**: Ideate new skills or slash commands to augment autonomy.
 
 ---
 
 ## Active Backlog Tasks
 
-- [ ] No active tasks remaining.
+- [ ] Run EVALUATION.md Phases 1-6 interactively in a fresh `claude` session and log any protocol deviations.
+- [ ] Tag v2.0.

@@ -9,6 +9,7 @@ disable-model-invocation: false
 This is the explicit form of the Startup SOP in `CLAUDE.md`. Execute it in exactly this order and **never modify any file**.
 
 ## 1. Read all three memory files
+
 - `Read` `.agents/memory/context.md`
 - `Read` `.agents/memory/backlog.md`
 - `Read` `.agents/memory/changelog.md`
@@ -16,11 +17,13 @@ This is the explicit form of the Startup SOP in `CLAUDE.md`. Execute it in exact
 If any file is missing, stop and report which one, then suggest copying it from Epoch's `template/.agents/memory/`.
 
 ## 2. Detect blank templates
+
 The memory is **uninitialized** if `context.md` still has an empty "Active Stack Details" table, the `project` frontmatter key is empty, or `backlog.md` still contains bracketed placeholders such as `[Name of Next Major Objective]` or the line "Unassigned - Run `/plan`".
 
 If uninitialized: say plainly that the memory files are blank templates, and hand off to `/plan` (Path A: New Project Intake). Do not invent a project state.
 
 ## 3. Report (if initialized)
+
 Present a concise state report with these four sections, quoting the files rather than paraphrasing loosely:
 
 1. **Architecture snapshot**: the project name and domain from `context.md` frontmatter, the stack table, and the module descriptions in one or two lines each.
@@ -31,4 +34,5 @@ Present a concise state report with these four sections, quoting the files rathe
 Also note whether `## Verification Commands` in `context.md` is populated, so the user knows what `/checkpoint` will run.
 
 ## 4. Handoff
+
 End by asking whether to start on the Session Focus, or to run `/plan` to groom the backlog first. Then stop and wait for the user.
