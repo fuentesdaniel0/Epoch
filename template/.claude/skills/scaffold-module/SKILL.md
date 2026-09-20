@@ -1,6 +1,6 @@
 ---
 name: scaffold-module
-description: A generic script for generating boilerplate and folder structures for a new module or feature. Trigger this when asked to create a new module, feature, or component.
+description: Generate boilerplate and folder structure for a new module, feature, or component. Use when the user asks to create, scaffold, or add a new module, feature, package, service, or component.
 ---
 
 # Scaffold Module Workflow
@@ -12,7 +12,8 @@ When the user requests to create a new module, component, or feature, execute th
 - Clarify if there are any specific design patterns (e.g., MVC, Repository Pattern, Atomic Design) that the module must adhere to.
 
 ## 2. Directory Creation
-- Use `run_command` (e.g., `mkdir -p path/to/module`) to create the necessary directory structure. A standard module might require:
+- Use `Glob` to confirm where existing modules live before choosing a path; never guess the layout.
+- Use `Bash` (e.g., `mkdir -p path/to/module`) to create the necessary directory structure. A standard module might require:
   - `src/modules/<module-name>/`
   - `src/modules/<module-name>/__tests__/`
 
@@ -23,5 +24,5 @@ When the user requests to create a new module, component, or feature, execute th
 
 ## 4. Documentation & Verification
 - Update `.agents/memory/context.md` to reflect the newly created module in the Architecture / Code Graph section.
-- Compile or lint the newly created files to ensure they are structurally sound.
+- Compile or lint the newly created files to ensure they are structurally sound (use the `## Verification Commands` from `context.md` when present).
 - Confirm with the user that the module has been scaffolded and is ready for detailed implementation.

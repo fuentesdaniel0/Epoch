@@ -1,3 +1,9 @@
+---
+protocol_version: 2.0
+project: "Epoch"
+domain: "Markdown memory protocol giving Claude Code persistent state across sessions"
+---
+
 # Active State & Current Architecture
 
 This file documents the active state, current configurations, code graph, and verification status of the current project.
@@ -43,6 +49,15 @@ graph TD
 ## Environment / Security Notes
 
 *   No secrets or cloud resources. Live harness config files (`.agents/settings.json`, `.agents/mcp_config.json`) are git-ignored; see `.agents/mcp_config.example.json`.
+
+---
+
+## Verification Commands
+
+<!-- One shell command per line inside the fenced block. `/checkpoint` runs them in order from the repository root and stops at the first failure. Leave the block empty if verification is not configured. -->
+
+```bash
+```
 
 ---
 

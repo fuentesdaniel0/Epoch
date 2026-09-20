@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Epoch protocol active. Execute the Startup SOP from CLAUDE.md before answering anything about project state: read .agents/memory/context.md and the Session Focus atop .agents/memory/backlog.md. Run /init for a full state report.'"
+          }
+        ]
+      }
+    ]
+  }
+}

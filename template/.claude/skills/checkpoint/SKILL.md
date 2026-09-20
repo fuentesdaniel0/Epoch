@@ -1,14 +1,14 @@
 ---
-name: session-checkpoint
-description: Interactive workflow to execute the project checkpoint protocol and wrap up a session. Trigger this via `/checkpoint`.
+name: checkpoint
+description: Execute the Epoch session checkpoint protocol and wrap up the session. Use for /checkpoint, or when the user says "wrap up the session", "save progress", "close out", "let's checkpoint", "commit the state", "I'm done for today", or asks to prepare to close the session.
 ---
 
 # Session Checkpoint Workflow
 
-When the user triggers the `/checkpoint` command or asks to prepare to close the session, you must execute the following protocol in exactly this order:
+When the user triggers `/checkpoint` or asks to prepare to close the session, you must execute the following protocol in exactly this order:
 
 ## 1. Status Check
-- Run `git status` to see what files have been modified or created during the session.
+- Run `git status` with `Bash` to see what files have been modified or created during the session.
 - Review your recent tool calls and actions to summarize what you accomplished.
 
 ## 2. Memory & Tracker Updates
@@ -18,12 +18,14 @@ When the user triggers the `/checkpoint` command or asks to prepare to close the
 - **Memory Rotation & Archiving**: Check the size of `.agents/memory/changelog.md`. If it is growing too long (e.g., tracking more than the last 3 major milestones), automatically move the oldest entries into an archive file (e.g., `.agents/memory/archive/changelog-v1.md`) to preserve context window tokens.
 
 ## 3. Next Session Planning
-- Interactively ask the user: *"What should our primary focus be for the next session?"*
+- Interactively ask the user: *"What should our primary focus be for the next session?"* Then **end your turn and wait**; never answer this question yourself.
 - Inject their response into the "Session Focus" section at the top of `.agents/memory/backlog.md`.
 
-## 4. Verification
-- Run the project's native build, lint, and test commands to ensure the codebase is clean before closing. (e.g., `make test`, `npm test`, `pytest`, or `cargo test` depending on the tech stack).
-- If any commands fail, attempt to fix the issues, or notify the user and ask if they still want to commit.
+## 4. Verification (data-driven)
+- `Read` the `## Verification Commands` section of `.agents/memory/context.md`.
+- If the fenced block lists commands, run each one in order with `Bash` from the repository root and stop at the first failure.
+- If the section is absent or the block is empty, state plainly: *"Verification is not configured for this workspace (no commands under `## Verification Commands` in context.md)."* and continue to the next step.
+- If any command fails, attempt to fix the issues, or notify the user and ask if they still want to commit.
 
 ## 5. Source Control Checkpoint
 - Check if the workspace is initialized as a git repository by executing `git rev-parse --is-inside-work-tree` or verifying if a `.git` directory exists.
@@ -40,5 +42,5 @@ When the user triggers the `/checkpoint` command or asks to prepare to close the
 
 ## 7. Context Window Reset Reminder
 - In your final response, remind the developer about the **Context Window Reset Protocol**:
-  - Suggest that if the milestone is fully complete, or if they notice the chat response times slowing down due to a long transcript, they can safely start a fresh chat session.
-  - Advise them to begin the new session by simply asking the new agent to: `"Please read the memory files under .agents/memory/ to synchronize state and check current backlog priorities."`
+  - Suggest that if the milestone is fully complete, or if they notice the chat response times slowing down due to a long transcript, they can safely start a fresh Claude Code session (`/clear` or a new `claude` process).
+  - Advise them to begin the new session by running `/init`, which reads the memory files under `.agents/memory/` to synchronize state and check current backlog priorities.

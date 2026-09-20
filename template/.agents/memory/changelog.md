@@ -1,3 +1,7 @@
+---
+protocol_version: 2.0
+---
+
 # Project History & Milestone Timeline
 
 This file captures the chronological history of milestones, architectural decisions, and tasks completed in the repository.

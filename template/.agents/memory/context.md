@@ -1,3 +1,9 @@
+---
+protocol_version: 2.0
+project: ""
+domain: ""
+---
+
 # Active State & Current Architecture
 
 This file documents the active state, current configurations, code graph, and verification status of the current project.
@@ -35,6 +41,15 @@ graph TD
 ## Environment / Security Notes
 
 *List any local environment requirements, mock passcodes, or test API keys needed for development.*
+
+---
+
+## Verification Commands
+
+<!-- One shell command per line inside the fenced block. `/checkpoint` runs them in order from the repository root and stops at the first failure. Leave the block empty if verification is not configured. -->
+
+```bash
+```
 
 ---
 
