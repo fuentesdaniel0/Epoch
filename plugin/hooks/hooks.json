@@ -1,0 +1,16 @@
+{
+  "description": "Epoch: remind Claude to run the Startup SOP, only in directories that are Epoch workspaces.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f ./.agents/memory/context.md ] && echo 'This project uses the Epoch memory protocol. Silently read .agents/memory/context.md and the Session Focus at the top of .agents/memory/backlog.md before responding about project state; offer /epoch:init for a full state report. Never answer questions about project state from guesswork.' || exit 0",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
