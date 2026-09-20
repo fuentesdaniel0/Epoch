@@ -26,3 +26,6 @@ This file captures the chronological history of milestones, architectural decisi
 
 ### Milestone (2026-09-20): Tagged v1.0 and v2.0, merged claude-code-v2 into master
 *   **Accomplishment**: Tagged the last Antigravity/ADK commit as `v1.0`, merged `claude-code-v2` into `master` with a no-fast-forward merge commit, and tagged the result `v2.0`. Neither tags nor master have been pushed.
+
+### Milestone (2026-09-20): Packaged Epoch as an installable Claude Code plugin with eval suite
+*   **Accomplishment**: `plugin/` (manifest 2.1.0, five skills, conditional SessionStart hook, bundled memory templates) is installable from this repo's own marketplace (`/plugin marketplace add fuentesdaniel0/Epoch`, `/plugin install epoch@epoch`) and ships a four-case `claude plugin eval` suite.
