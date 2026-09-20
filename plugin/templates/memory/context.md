@@ -47,7 +47,7 @@ graph TD
 
 ## Verification Commands
 
-<!-- One shell command per line inside the fenced block. `/checkpoint` runs them in order from the repository root and stops at the first failure. Leave the block empty if verification is not configured. -->
+<!-- One shell command per line inside the fenced block. `/epoch:checkpoint` runs them in order from the repository root and stops at the first failure. Leave the block empty if verification is not configured. -->
 
 ```bash
 ```

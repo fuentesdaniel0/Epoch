@@ -1,11 +1,28 @@
 ---
 name: plan
-description: Interactive workflow to define a new project or plan the next sprint by reviewing the backlog and migrating tasks. Use for /plan or /sprint, or when the user says "let's plan", "set up the project", "groom the backlog", "plan the sprint", "what should we work on next", or "initialize the memory".
+description: Interactive workflow to define a new project or plan the next sprint by reviewing the backlog and migrating tasks. Bootstraps .agents/memory/ in a directory that has none. Use for /epoch:plan or /sprint, or when the user says "let's plan", "set up the project", "groom the backlog", "plan the sprint", "what should we work on next", or "initialize the memory".
 ---
 
 # Project Planning Workflow
 
-When the user triggers `/plan` or `/sprint`, first determine if the project has been initialized: `Read` `.agents/memory/context.md` and check whether it is populated with a project name (frontmatter), a tech stack, and architecture.
+> Invoked as `/epoch:plan` from the Epoch plugin, or `/plan` from a per-repo copy of this skill. The steps are identical.
+
+Workspace memory: !`[ -f .agents/memory/context.md ] && echo present || echo ABSENT`
+
+## 0. Bootstrap check
+
+- If the line above says `present`, skip to step 1. (Per-repo copies of this skill always take this branch.)
+- If it says `ABSENT`, this directory is not yet an Epoch workspace. Say so in one sentence, then create the memory from the plugin's bundled templates with `Bash`:
+
+```bash
+mkdir -p .agents/memory && cp "${CLAUDE_PLUGIN_ROOT}/templates/memory/"*.md .agents/memory/
+```
+
+  If `${CLAUDE_PLUGIN_ROOT}` is not set or the copy fails (this skill is running outside the plugin), stop and tell the user to copy Epoch's `template/.agents/memory/` into `.agents/memory/` instead; do not hand-write memory files.
+- Offer, but do not apply unasked, two one-line extras in your next message: (a) append `${CLAUDE_PLUGIN_ROOT}/templates/CLAUDE.snippet.md` to the project's `CLAUDE.md` (create it if absent); (b) `git init` if `git rev-parse --is-inside-work-tree` fails. Apply whichever the user accepts.
+- After a bootstrap the project is uninitialized by definition: go straight into Path A and ask the two extras above together with the interview questions, in one message.
+
+When the user triggers `/epoch:plan` (or `/sprint`), first determine if the project has been initialized: `Read` `.agents/memory/context.md` and check whether it is populated with a project name (frontmatter), a tech stack, and architecture.
 
 Depending on the state, execute one of the following paths interactively.
 
@@ -20,7 +37,7 @@ Ask the user the following questions (you can group them or ask conversationally
 - **Tech Stack**: What programming languages, frameworks, or tools will we be using?
 - **Initial Milestones**: What are the first 1-3 major milestones or features we need to build?
 - **Constraints**: Are there any specific architectural constraints, testing requirements, deployment targets, or security considerations?
-- **Verification Commands**: Which commands should `/checkpoint` run to prove the codebase is clean (e.g., `npm test`, `pytest`, `make lint`)? Skip if none exist yet.
+- **Verification Commands**: Which commands should `/epoch:checkpoint` run to prove the codebase is clean (e.g., `npm test`, `pytest`, `make lint`)? Skip if none exist yet.
 
 *Wait for the user's responses before proceeding to Step 2.*
 

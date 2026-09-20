@@ -10,9 +10,9 @@ This file outlines the upcoming milestones, roadmap, and individual feature task
 
 ## Session Focus
 
-*This section dictates the immediate priority for the next AI agent session. It is populated during the `/checkpoint` wrap-up or via `/plan`.*
+*This section dictates the immediate priority for the next AI agent session. It is populated during the `/epoch:checkpoint` wrap-up or via `/epoch:plan`.*
 
-- [ ] Unassigned - Run `/plan` to define the focus.
+- [ ] Unassigned - Run `/epoch:plan` (or `/plan`) to define the focus.
 
 ---
 
