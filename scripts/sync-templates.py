@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
-"""Sync the pristine Epoch template into this repository's live root instance.
+"""Propagate the Epoch engine from its single source of truth to every copy.
 
-Source of truth: `template/`.
-Destinations at the repository root:
-  - `CLAUDE.md`            (always overwritten)
-  - `.claude/**`           (always overwritten; stale files are NOT deleted)
-  - `.agents/memory/**`    (never overwritten: memory files are instance state,
-                            only copied when missing at the destination)
+Source of truth:
+  plugin/skills/            -> the engine (SKILL.md files)
+  plugin/templates/memory/  -> blank state templates
+  template/CLAUDE.md, template/.claude/rules/, template/.claude/settings.json
+                            -> hand-maintained pieces of the copy-a-folder path
+                               (not part of the plugin, which ships its own hook)
+
+Destinations:
+  template/.claude/skills/        (generated, always overwritten, stale skills removed)
+  template/.agents/memory/        (generated, always overwritten)
+  <root>/CLAUDE.md                (from template/, always overwritten)
+  <root>/.claude/rules|settings   (from template/, always overwritten)
+  <root>/.claude/skills/          (from plugin/skills, always overwritten, stale removed)
+  <root>/.agents/memory/          (from plugin/templates/memory, NEVER overwritten:
+                                   only files missing at the destination are created)
 
 Run from anywhere: `python3 scripts/sync-templates.py`. Idempotent.
 """
@@ -15,12 +24,13 @@ import filecmp
 import os
 import shutil
 
-ENGINE_PATHS = ["CLAUDE.md", ".claude"]
-MEMORY_PATH = os.path.join(".agents", "memory")
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+PLUGIN_SKILLS = os.path.join(ROOT, "plugin", "skills")
+PLUGIN_MEMORY = os.path.join(ROOT, "plugin", "templates", "memory")
+TEMPLATE = os.path.join(ROOT, "template")
 
 
 def copy_file(src: str, dst: str) -> bool:
-    """Copy src to dst if content differs. Returns True when a write happened."""
     if os.path.exists(dst) and filecmp.cmp(src, dst, shallow=False):
         return False
     os.makedirs(os.path.dirname(dst) or ".", exist_ok=True)
@@ -28,48 +38,62 @@ def copy_file(src: str, dst: str) -> bool:
     return True
 
 
-def sync_tree(src: str, dst: str, overwrite: bool) -> int:
-    """Recursively copy src into dst. Returns the number of files written."""
-    written = 0
+def sync_tree(src: str, dst: str, overwrite: bool, prune: bool = False) -> tuple[int, int]:
+    """Mirror src into dst. Returns (files written, files removed)."""
+    written = removed = 0
     if os.path.isfile(src):
         if overwrite or not os.path.exists(dst):
             written += copy_file(src, dst)
-        return written
-    for entry in sorted(os.listdir(src)):
+        return written, removed
+    os.makedirs(dst, exist_ok=True)
+    src_entries = set(os.listdir(src))
+    for entry in sorted(src_entries):
         s, d = os.path.join(src, entry), os.path.join(dst, entry)
         if os.path.isdir(s):
-            written += sync_tree(s, d, overwrite)
+            w, r = sync_tree(s, d, overwrite, prune)
+            written += w
+            removed += r
         elif overwrite or not os.path.exists(d):
             written += copy_file(s, d)
-    return written
+    if prune:
+        for entry in sorted(set(os.listdir(dst)) - src_entries):
+            target = os.path.join(dst, entry)
+            shutil.rmtree(target) if os.path.isdir(target) else os.remove(target)
+            removed += 1
+    return written, removed
+
+
+def report(label: str, result: tuple[int, int]) -> None:
+    w, r = result
+    print(f"  {label}: {w} written, {r} removed")
 
 
 def main() -> None:
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    template_dir = os.path.join(root_dir, "template")
-    if not os.path.isdir(template_dir):
-        raise SystemExit(f"Template directory not found: {template_dir}")
+    for required in (PLUGIN_SKILLS, PLUGIN_MEMORY, TEMPLATE):
+        if not os.path.isdir(required):
+            raise SystemExit(f"Missing source directory: {required}")
 
-    print("Starting template synchronization...")
-    print(f"Source of truth: {template_dir}")
+    print("Epoch sync: plugin/ -> template/ -> repo root")
 
-    total = 0
-    for rel in ENGINE_PATHS:
-        src = os.path.join(template_dir, rel)
-        if not os.path.exists(src):
-            print(f"  skip   {rel} (missing in template)")
-            continue
-        n = sync_tree(src, os.path.join(root_dir, rel), overwrite=True)
-        print(f"  engine {rel}: {n} file(s) written")
-        total += n
+    # 1. plugin -> template (generated copy-a-folder distribution)
+    report("template/.claude/skills",
+           sync_tree(PLUGIN_SKILLS, os.path.join(TEMPLATE, ".claude", "skills"), overwrite=True, prune=True))
+    report("template/.agents/memory",
+           sync_tree(PLUGIN_MEMORY, os.path.join(TEMPLATE, ".agents", "memory"), overwrite=True, prune=True))
 
-    mem_src = os.path.join(template_dir, MEMORY_PATH)
-    if os.path.isdir(mem_src):
-        n = sync_tree(mem_src, os.path.join(root_dir, MEMORY_PATH), overwrite=False)
-        print(f"  memory {MEMORY_PATH}: {n} missing file(s) created (existing never overwritten)")
-        total += n
+    # 2. template -> root engine (dogfood instance)
+    for rel in ("CLAUDE.md", os.path.join(".claude", "rules"), os.path.join(".claude", "settings.json")):
+        src = os.path.join(TEMPLATE, rel)
+        if os.path.exists(src):
+            report(rel, sync_tree(src, os.path.join(ROOT, rel), overwrite=True, prune=os.path.isdir(src)))
+    report(".claude/skills",
+           sync_tree(PLUGIN_SKILLS, os.path.join(ROOT, ".claude", "skills"), overwrite=True, prune=True))
 
-    print(f"Template synchronization complete: {total} file(s) written.")
+    # 3. plugin -> root memory (state: never overwrite what exists)
+    report(".agents/memory (missing only)",
+           sync_tree(PLUGIN_MEMORY, os.path.join(ROOT, ".agents", "memory"), overwrite=False))
+
+    print("Done.")
 
 
 if __name__ == "__main__":

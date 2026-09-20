@@ -130,7 +130,7 @@ def main() -> None:
             subprocess.run(["git", "init", "-q"], cwd=target_dir, check=True)
             subprocess.run(["git", "add", "-A"], cwd=target_dir, check=True)
             subprocess.run(["git", "commit", "-q", "-m",
-                            f"chore(epoch): initialize {name} with Epoch memory protocol v2.0"],
+                            f"chore(epoch): initialize {name} with Epoch memory protocol v2.1"],
                            cwd=target_dir, check=True)
             print("Initial commit created.")
         except (subprocess.CalledProcessError, FileNotFoundError) as exc:
