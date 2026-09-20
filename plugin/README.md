@@ -30,7 +30,7 @@ claude --plugin-dir ./plugin
 
 ## How bootstrap works
 
-`init` and `plan` check for `.agents/memory/context.md` in the current directory. When it is missing they copy the three blank memory files from this plugin's `templates/memory/` (resolved through `${CLAUDE_PLUGIN_ROOT}`), then offer two optional extras: appending a short Epoch block to the project's `CLAUDE.md`, and `git init` if the directory is not a repository. Neither extra is applied without your yes.
+`init` and `plan` check for `.agents/memory/context.md` in the current directory (an inline `!` shell check at skill load). When it is missing they write the three blank memory files with the `Write` tool from a **generated section at the end of each skill**, which `scripts/sync-templates.py` renders verbatim from `templates/memory/` and `templates/CLAUDE.snippet.md`. No file under the plugin directory is read at runtime: headless and sandboxed sessions deny reads outside the working directory, and `${CLAUDE_PLUGIN_ROOT}` is therefore not used by the skills. After writing, they offer two optional extras: appending the Epoch block to the project's `CLAUDE.md`, and `git init` if the directory is not a repository. Neither extra is applied without your yes.
 
 `checkpoint` and `milestone` never bootstrap. Checkpointing a workspace that has no memory is refused rather than invented.
 
@@ -48,9 +48,10 @@ Users receive plugin updates only when `version` in `.claude-plugin/plugin.json`
 plugin/
 ├── .claude-plugin/plugin.json   # manifest (the only file that belongs in .claude-plugin/)
 ├── skills/<name>/SKILL.md       # init, plan, checkpoint, milestone, scaffold-module
+│                                # (init and plan end with a generated templates section)
 ├── hooks/hooks.json             # conditional SessionStart hook
-├── templates/memory/            # blank context.md, backlog.md, changelog.md
-├── templates/CLAUDE.snippet.md  # block offered for the project's CLAUDE.md
+├── templates/memory/            # blank context.md, backlog.md, changelog.md (source of the generated section)
+├── templates/CLAUDE.snippet.md  # block offered for the project's CLAUDE.md (same)
 └── evals/                       # claude plugin eval suite
 ```
 

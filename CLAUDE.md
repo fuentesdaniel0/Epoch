@@ -25,3 +25,5 @@ This repository runs **Epoch**: a Markdown protocol that gives Claude Code persi
 ## Operating discipline
 
 Follow `.claude/rules/core-directives.md` (loaded automatically): explore before editing, verify continuously, work in atomic steps. Commit only when a skill says to. Never push unless the user explicitly asks.
+
+With the Epoch plugin installed the same commands are available as `/epoch:init`, `/epoch:plan`, `/epoch:milestone`, `/epoch:checkpoint`.

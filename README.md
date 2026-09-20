@@ -39,7 +39,7 @@ Each skill's description is written so Claude also triggers it from natural lang
 
 ### How bootstrap works
 
-`init` and `plan` check for `.agents/memory/context.md` in the current directory. When it is missing they write the three blank memory files from the plugin's bundled templates, then offer two optional extras: appending a short Epoch block to the project's `CLAUDE.md` (created if absent) and `git init` if the directory is not a repository. Nothing optional is applied without your yes.
+`init` and `plan` check for `.agents/memory/context.md` in the current directory. When it is missing they write the three blank memory files from templates embedded in the skill itself (a section the sync script generates from `plugin/templates/`, so nothing under the plugin directory has to be readable at runtime), then offer two optional extras: appending a short Epoch block to the project's `CLAUDE.md` (created if absent) and `git init` if the directory is not a repository. Nothing optional is applied without your yes.
 
 ### Conditional SessionStart hook
 
