@@ -28,7 +28,7 @@ If no description was given, ask the user for a one-line description, then stop 
 
 ```markdown
 ### Milestone (YYYY-MM-DD): <description>
-*   **Accomplishment**: <one or two sentences, expanded from the description and your knowledge of this session's work>
+* **Accomplishment**: <one or two sentences, expanded from the description and your knowledge of this session's work>
 ```
 
 Use today's date shown above. Keep the entry short; this is a marker, not a sprint narrative.

@@ -16,3 +16,7 @@ claude plugin eval ./plugin --scaffold --allow-tools Bash Write Edit --trust-plu
 ```
 
 Add `--runs 1 --ablation none -j 4` for a fast smoke pass. Results land in `plugin/evals/results/` (git-ignored).
+
+## Requirements and status
+
+Bash grants require Claude Code's sandbox backend (`bubblewrap` + `socat` on Linux); without it the runner refuses the run. Last recorded run (2026-09-20, `--runs 1`): `state-restoration` passed at 1.0 (0.6 without the plugin). The three Bash-dependent cases are pending an environment with `socat`; their behaviors were verified manually with `claude -p --plugin-dir ./plugin` on the same fixtures.

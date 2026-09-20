@@ -103,5 +103,37 @@ git config user.email "eval@example.com"
 git config user.name "Epoch Eval"
 git add -A
 git commit -q -m "chore: fixture workspace"
-sed -i 's/__VERIFY_COMMAND__/echo verify-ok/' .agents/memory/context.md
+sed -i 's/__VERIFY_COMMAND__/python3 -m pytest -q/' .agents/memory/context.md
+# minimal codebase consistent with the memory files
+mkdir -p api queue tests
+cat > api/__init__.py <<'PY'
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.post("/events")
+def ingest(event: dict) -> dict:
+    return {"accepted": True}
+PY
+cat > queue/retry.py <<'PY'
+"""Exponential-backoff retry queue. In progress: backoff schedule not yet implemented."""
+
+
+def backoff_schedule(attempt: int) -> float:
+    raise NotImplementedError("EPOCH-FIXTURE-7731")
+PY
+cat > tests/test_api.py <<'PY'
+from api import app
+
+
+def test_app_exists():
+    assert app is not None
+PY
+cat > pyproject.toml <<'TOML'
+[project]
+name = "falcon"
+version = "0.1.0"
+dependencies = ["fastapi"]
+TOML
 git add -A && git commit -q -m "chore: fixture verification command"
