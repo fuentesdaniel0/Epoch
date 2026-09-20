@@ -52,5 +52,5 @@ This file captures the chronological history of milestones, architectural decisi
 *   **Accomplishment**: Created a new autonomous agent project (`CalendarAgent/`) under `Dev` based on `CalendarV2`. Ported the parallel availability query execution from `CalendarV2` into `calendar_tools.py` using `gcloud compute advice calendar-mode`. Registered tools in the ADK agent structure for listing machine types, regions, and executing queries. Hardened type validation and test coverage.
 *   **Decisions**: Extracted file editing/creation tools to keep the advisor agent strictly focused on resource availability.
 
-
-
+### Milestone (2026-09-20): Ported Epoch engine to Claude Code
+*   **Accomplishment**: The rules/workflows engine now exists as native Claude Code constructs (`CLAUDE.md`, `.claude/rules/`, `.claude/skills/`) with new `/init` and `/milestone` skills; `.agents/memory/` is unchanged apart from protocol_version frontmatter and a Verification Commands section.
