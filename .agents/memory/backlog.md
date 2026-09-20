@@ -12,7 +12,7 @@ This file outlines the upcoming milestones, roadmap, and individual feature task
 
 *This section dictates the immediate priority for the next AI agent session. It is populated during the `/checkpoint` wrap-up or via `/plan`.*
 
-- [ ] v2.1 release: push `plugin-v2.1`, merge to master, tag `v2.1.0`; run the full 3-run eval; submit `plugin/` to the community marketplace via the Console form (owner action).
+- [ ] v2.1 release: merge `plugin-v2.1` to master, tag `v2.1.0`, push branch and tags; submit `plugin/` to the community marketplace via the Console form (owner action).
 
 ---
 
@@ -54,6 +54,6 @@ This file outlines the upcoming milestones, roadmap, and individual feature task
 
 ## Active Backlog Tasks
 
-- [ ] Run the full eval suite (default 3 runs, with/without arms) and record the summary table in the changelog.
+- [x] Run the full eval suite (default 3 runs, with/without arms) and record the summary table in the changelog.
 - [ ] Merge `plugin-v2.1` into master and tag `v2.1.0`.
 - [ ] Submit `plugin/` at platform.claude.com/plugins/submit (owner).

@@ -104,4 +104,46 @@ git config user.name "Epoch Eval"
 git add -A
 git commit -q -m "chore: fixture workspace"
 sed -i 's/__VERIFY_COMMAND__/echo EPOCH-VERIFY-CANARY-4412/' .agents/memory/context.md
-git add -A && git commit -q -m "chore: fixture verification canary"
+# codebase consistent with the memory: the backoff schedule was just implemented
+mkdir -p api queue tests
+cat > api/__init__.py <<'PY'
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.post("/events")
+def ingest(event: dict) -> dict:
+    return {"accepted": True}
+PY
+cat > pyproject.toml <<'TOML'
+[project]
+name = "falcon"
+version = "0.1.0"
+dependencies = ["fastapi"]
+TOML
+cat > queue/retry.py <<'PY'
+"""Exponential-backoff retry queue."""
+
+BASE_DELAY_SECONDS = 0.5
+MAX_DELAY_SECONDS = 60.0
+
+
+def backoff_schedule(attempt: int) -> float:
+    """Delay before retry number `attempt`, capped at MAX_DELAY_SECONDS."""
+    if attempt < 1:
+        raise ValueError("attempt must be >= 1")
+    return min(BASE_DELAY_SECONDS * (2 ** (attempt - 1)), MAX_DELAY_SECONDS)
+PY
+cat > tests/test_retry.py <<'PY'
+from queue.retry import backoff_schedule
+
+
+def test_schedule_grows_and_caps():
+    assert backoff_schedule(1) == 0.5
+    assert backoff_schedule(2) == 1.0
+    assert backoff_schedule(50) == 60.0
+PY
+git add -A
+git commit -q -m "feat(queue): implement exponential backoff schedule for the retry queue"
+git add -A && git commit -q --allow-empty -m "chore: fixture verification canary"

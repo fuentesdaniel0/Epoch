@@ -17,6 +17,34 @@ claude plugin eval ./plugin --scaffold --allow-tools Bash Write Edit --trust-plu
 
 Add `--runs 1 --ablation none -j 4` for a fast smoke pass. Results land in `plugin/evals/results/` (git-ignored).
 
-## Requirements and status
+## Last recorded run
 
-Bash grants require Claude Code's sandbox backend (`bubblewrap` + `socat` on Linux); without it the runner refuses the run. Last recorded run (2026-09-20, `--runs 1`): `state-restoration` passed at 1.0 (0.6 without the plugin). The three Bash-dependent cases are pending an environment with `socat`; their behaviors were verified manually with `claude -p --plugin-dir ./plugin` on the same fixtures.
+2026-09-20, default settings (3 runs per arm, with/without baseline), Claude Code 2.1.278:
+
+| Case | WITH | W/OUT | Δ |
+| :--- | :--- | :--- | :--- |
+| cold-init | 1.00 | 0.00 | +1.00 |
+| milestone-discipline | 1.00 | 0.50 | +0.50 |
+| checkpoint-verification | 1.00 | 0.62 | +0.38 |
+| state-restoration | 1.00 | 1.00 | 0.00 |
+
+All four pass at threshold 1.0. `state-restoration` does not discriminate: without the plugin Claude still reads the memory files when they are the only documentation, which is the intended fallback.
+
+## Requirements
+
+Granting `Bash` requires Claude Code's sandbox backend. On Linux that means `bubblewrap` and `socat`:
+
+```bash
+sudo apt install bubblewrap socat
+```
+
+Without them the runner refuses the run rather than executing unconfined.
+
+## Writing cases for this plugin
+
+Two lessons from building this suite, worth keeping:
+
+- **Fixtures must be self-consistent.** Claude checks the working tree against the memory files. A fixture whose `context.md` describes a FastAPI service must actually contain one, and a milestone case must contain the work it claims shipped. Otherwise Claude correctly refuses to record or report state it cannot corroborate, and the case fails for the right reason at the wrong layer.
+- **`tool_used: Skill` does not fire for slash invocations.** A prompt of `/epoch:init` expands the skill into the prompt rather than dispatching a `Skill` tool call, so that grader can never pass. Grade the skill's effects instead.
+
+Grader paths are plain globs; brace alternation such as `{backlog,changelog}.md` does not match.
