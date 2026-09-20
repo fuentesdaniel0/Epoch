@@ -6,5 +6,7 @@ config:
   MD033: false   # inline HTML: GitHub alert blocks and HTML comments are used
   MD036: false   # emphasis as heading: template placeholders use italics
   MD041: false   # first line heading: memory files start with YAML frontmatter
+  MD048: false   # code fence style: generated template blocks use ~~~ around ``` content
+  MD024: false   # duplicate headings: generated template blocks repeat memory headings
 ignores:
   - node_modules
