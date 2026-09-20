@@ -55,4 +55,4 @@ This file outlines the upcoming milestones, roadmap, and individual feature task
 ## Active Backlog Tasks
 
 - [ ] Run EVALUATION.md Phases 1-6 interactively in a fresh `claude` session and log any protocol deviations.
-- [ ] Tag v2.0.
+- [x] Tag v2.0 (local; not yet pushed).
