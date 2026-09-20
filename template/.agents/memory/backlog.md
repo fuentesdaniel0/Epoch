@@ -1,3 +1,7 @@
+---
+protocol_version: 2.0
+---
+
 # Product Backlog & Future Tasks
 
 This file outlines the upcoming milestones, roadmap, and individual feature tasks planned for this repository. When an agent completes a task, it should be removed from this list and documented in `changelog.md`.
@@ -15,11 +19,13 @@ This file outlines the upcoming milestones, roadmap, and individual feature task
 ## High-Level Roadmap
 
 ### Milestone A: [Name of Next Major Objective]
-*   **[Feature 1]**: [Description of feature.]
-*   **[Feature 2]**: [Description of feature.]
+
+- **[Feature 1]**: [Description of feature.]
+- **[Feature 2]**: [Description of feature.]
 
 ### Milestone B: [Future Objective]
-*   **[Feature 3]**: [Description of feature.]
+
+- **[Feature 3]**: [Description of feature.]
 
 ---
 

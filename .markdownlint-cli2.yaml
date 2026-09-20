@@ -1,0 +1,10 @@
+# Markdown lint config for Epoch. Run via the Verification Commands in
+# .agents/memory/context.md: npx --yes markdownlint-cli2 "**/*.md" "#node_modules"
+config:
+  MD013: false   # line length: prose files use one sentence per line
+  MD032: false   # blanks around lists: memory templates use compact lists
+  MD033: false   # inline HTML: GitHub alert blocks and HTML comments are used
+  MD036: false   # emphasis as heading: template placeholders use italics
+  MD041: false   # first line heading: memory files start with YAML frontmatter
+ignores:
+  - node_modules

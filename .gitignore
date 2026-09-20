@@ -1,7 +1,14 @@
+# Live, instance-scoped harness config (never commit into a framework repo)
+.agents/settings.json
+.agents/mcp_config.json
+.claude/settings.local.json
+
+# Python
 venv/
 __pycache__/
 *.pyc
-test_memory/
+
+# Local secrets and noise
 .env
 *.log
 .securecoder/

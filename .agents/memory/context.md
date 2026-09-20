@@ -1,3 +1,9 @@
+---
+protocol_version: 2.0
+project: "Epoch"
+domain: "Markdown memory protocol giving Claude Code persistent state across sessions"
+---
+
 # Active State & Current Architecture
 
 This file documents the active state, current configurations, code graph, and verification status of the current project.
@@ -11,10 +17,10 @@ This file documents the active state, current configurations, code graph, and ve
 
 | Layer | Technology | Key Details |
 | :--- | :--- | :--- |
-| **Framework** | FastAPI / google-adk | ASGI agent microservice |
-| **Language/Typing** | Python | Type-annotated modules, Pydantic validation |
-| **Testing** | Unittest / pytest | Local unit tests and manual endpoint QA |
-| **Deployment** | Vertex AI / Agent Engine | Deployed reasoning engine on Google Cloud |
+| **Framework** | Markdown protocol | Files under `.agents/memory/` are the whole runtime state |
+| **Language/Typing** | Markdown, Python 3 | Python only for `scripts/` tooling |
+| **Testing** | Behavioral (`EVALUATION.md`) | Manual QA script walked against a fresh session |
+| **Deployment** | None | Distributed by copying `template/` |
 
 ---
 
@@ -25,28 +31,48 @@ This file documents the active state, current configurations, code graph, and ve
 ```mermaid
 graph TD
     Root["/"]
-    Template["template/.agents/"]
-    RootAgents[".agents/"]
+    Claude["CLAUDE.md"]
+    Engine[".claude/ (rules, skills, settings)"]
+    Memory[".agents/memory/ (context, backlog, changelog)"]
+    Template["template/ (pristine CLAUDE.md + .claude + .agents/memory)"]
+    Scripts["scripts/ (sync-templates, create-workspace)"]
     Eval["EVALUATION.md"]
-    ADKTemplate["adk-agent-template/"]
+    Root --> Claude
+    Root --> Engine
+    Root --> Memory
     Root --> Template
-    Root --> RootAgents
+    Root --> Scripts
     Root --> Eval
-    Root --> ADKTemplate
+    Template -. sync-templates.py .-> Claude
+    Template -. sync-templates.py .-> Engine
 ```
 
-### Module Descriptions:
-- **`template/.agents/`**: The pristine distribution folder containing rules, skills, and blank memory templates.
-- **`.agents/`**: The active memory system tracking the development of *this* repository itself.
-- **`EVALUATION.md`**: Behavioral test script for verifying AI agent compliance.
-- **`adk-agent-template/`**: An Agent Development Kit (ADK) template configured for hosting Epoch-compliant agents on Google Cloud Agent Engine, complete with Agent-to-Agent (A2A) integration, environment configuration, and localized memory template.
+### Module Descriptions
+
+- **`CLAUDE.md`**: Protocol entry point loaded every session: Startup SOP, memory map, command index.
+- **`.claude/`**: Claude Code-native engine. `rules/core-directives.md` (always loaded), `skills/{init,plan,milestone,checkpoint,scaffold-module}/SKILL.md`, `settings.json` (SessionStart hook).
+- **`.agents/memory/`**: Harness-neutral state for *this* repository's own development. Never overwritten by sync.
+- **`template/`**: Pristine source of truth mirroring the root layout, with blank memory templates (`protocol_version: 2.0`).
+- **`scripts/`**: `sync-templates.py` (template -> root, idempotent) and `create-workspace.py` (template -> new project + interview + git init).
+- **`EVALUATION.md`**: Six-phase behavioral test script for a fresh Claude Code session.
 
 ---
 
 ## Environment / Security Notes
 
-*   **Active Agent Engine ID**: `projects/calendar-adviser/locations/us-central1/reasoningEngines/6274482087401390080`
-*   **MCP Servers**: Project-scoped MCP servers loaded from `.agents/settings.json` and `.agents/mcp_config.json`.
+- No secrets or cloud resources. Live harness config files (`.agents/settings.json`, `.agents/mcp_config.json`) are git-ignored; see `.agents/mcp_config.example.json`.
+
+---
+
+## Verification Commands
+
+<!-- One shell command per line inside the fenced block. `/checkpoint` runs them in order from the repository root and stops at the first failure. Leave the block empty if verification is not configured. -->
+
+```bash
+npx --yes markdownlint-cli2 "**/*.md" "#node_modules"
+python3 scripts/sync-templates.py
+git diff --quiet -- CLAUDE.md .claude
+```
 
 ---
 
@@ -54,7 +80,7 @@ graph TD
 
 We enforce strict validation criteria. The current status is:
 
-1.  **Type Checks**: N/A
-2.  **Linting**: Clean Markdown.
-3.  **Test Suites**: Passed template unit tests (`test_agent.py` - 4 tests).
-4.  **Production Builds**: N/A
+1. **Type Checks**: N/A
+2. **Linting**: `markdownlint-cli2` clean (config in `.markdownlint-cli2.yaml`).
+3. **Test Suites**: N/A (behavioral evaluation only)
+4. **Production Builds**: N/A (sync idempotence checked: `sync-templates.py` then `git diff --quiet`)

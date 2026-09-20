@@ -1,0 +1,18 @@
+{
+  "_comment": "Example project-scoped MCP server config for harnesses that read .agents/mcp_config.json. Copy to mcp_config.json (git-ignored) and replace placeholders. Claude Code itself reads MCP servers from .mcp.json, not from this file.",
+  "mcpServers": {
+    "example-http-server": {
+      "serverUrl": "https://example.googleapis.com/mcp",
+      "authProviderType": "google_credentials",
+      "oauth": {
+        "scopes": [
+          "https://www.googleapis.com/auth/cloud-platform"
+        ]
+      },
+      "timeout": 30000,
+      "headers": {
+        "X-goog-user-project": "YOUR_GCP_PROJECT_ID"
+      }
+    }
+  }
+}

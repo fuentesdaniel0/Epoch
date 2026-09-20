@@ -1,3 +1,7 @@
+---
+protocol_version: 2.0
+---
+
 # Project History & Milestone Timeline
 
 This file captures the chronological history of milestones, architectural decisions, and tasks completed in the repository.
@@ -7,8 +11,9 @@ This file captures the chronological history of milestones, architectural decisi
 ## Sprint Chronology
 
 ### [Milestone 0: Project Initialization]
-*   **Accomplishment**: [Configured base project layout and verified environment.]
-*   **Decisions**: *[List any architectural or foundational choices made during this sprint.]*
+
+* **Accomplishment**: [Configured base project layout and verified environment.]
+* **Decisions**: *[List any architectural or foundational choices made during this sprint.]*
 
 ---
 
