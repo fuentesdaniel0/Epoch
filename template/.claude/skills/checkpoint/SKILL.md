@@ -1,11 +1,20 @@
 ---
 name: checkpoint
-description: Execute the Epoch session checkpoint protocol and wrap up the session. Use for /checkpoint, or when the user says "wrap up the session", "save progress", "close out", "let's checkpoint", "commit the state", "I'm done for today", or asks to prepare to close the session.
+description: Execute the Epoch session checkpoint protocol and wrap up the session. Use for /epoch:checkpoint, or when the user says "wrap up the session", "save progress", "close out", "let's checkpoint", "commit the state", "I'm done for today", or asks to prepare to close the session.
 ---
 
 # Session Checkpoint Workflow
 
-When the user triggers `/checkpoint` or asks to prepare to close the session, you must execute the following protocol in exactly this order:
+> Invoked as `/epoch:checkpoint` from the Epoch plugin, or `/checkpoint` from a per-repo copy of this skill. The steps are identical.
+
+Workspace memory: !`[ -f .agents/memory/context.md ] && echo present || echo ABSENT`
+
+## 0. Precondition: Epoch workspace required
+
+- If the line above says `ABSENT`, stop immediately. Reply: *"This directory is not an Epoch workspace (no `.agents/memory/context.md`). Run `/epoch:plan` to bootstrap it first."* Do **not** create memory files, do **not** guess state, and do **not** commit anything.
+- If it says `present`, continue.
+
+When the user triggers `/epoch:checkpoint` or asks to prepare to close the session, you must execute the following protocol in exactly this order:
 
 ## 1. Status Check
 
@@ -50,4 +59,4 @@ When the user triggers `/checkpoint` or asks to prepare to close the session, yo
 
 - In your final response, remind the developer about the **Context Window Reset Protocol**:
   - Suggest that if the milestone is fully complete, or if they notice the chat response times slowing down due to a long transcript, they can safely start a fresh Claude Code session (`/clear` or a new `claude` process).
-  - Advise them to begin the new session by running `/init`, which reads the memory files under `.agents/memory/` to synchronize state and check current backlog priorities.
+  - Advise them to begin the new session by running `/epoch:init`, which reads the memory files under `.agents/memory/` to synchronize state and check current backlog priorities.

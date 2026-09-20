@@ -12,7 +12,7 @@ This file outlines the upcoming milestones, roadmap, and individual feature task
 
 *This section dictates the immediate priority for the next AI agent session. It is populated during the `/checkpoint` wrap-up or via `/plan`.*
 
-- [ ] Prepare for v2.0 tag: run EVALUATION.md end-to-end in a fresh `claude` session against a `create-workspace.py` workspace, then tag.
+- [ ] v2.1 release: merge `plugin-v2.1` to master, tag `v2.1.0`, push branch and tags; submit `plugin/` to the community marketplace via the Console form (owner action).
 
 ---
 
@@ -35,12 +35,12 @@ This file outlines the upcoming milestones, roadmap, and individual feature task
 - [x] **Feature 3**: Data-driven `/checkpoint` verification from `## Verification Commands`.
 - [x] **Feature 4**: Strip ADK runtime, deployment tooling, and live MCP configs.
 
-### Milestone 4: v2.0 Release
+### Milestone 4: v2.0 Release (Completed)
 
 - [ ] **Feature 1**: Walk `EVALUATION.md` in a fresh interactive `claude` session (Phases 1-6) and record results.
 - [ ] **Feature 2**: Tag `v2.0` and publish release notes.
 
-### Milestone 5: Multi-Harness Adapters (Post v2.0)
+### Milestone 7: Multi-Harness Adapters (Post v2.1)
 
 - **Feature 1**: Thin engine ports (Cursor, Copilot, Antigravity) over the unchanged `.agents/memory/` state.
 - **Feature 2**: Optional domain packs (rules/skills bundles) installable into `.claude/`.
@@ -54,5 +54,6 @@ This file outlines the upcoming milestones, roadmap, and individual feature task
 
 ## Active Backlog Tasks
 
-- [ ] Run EVALUATION.md Phases 1-6 interactively in a fresh `claude` session and log any protocol deviations.
-- [x] Tag v2.0 (local; not yet pushed).
+- [x] Run the full eval suite (default 3 runs, with/without arms) and record the summary table in the changelog.
+- [ ] Merge `plugin-v2.1` into master and tag `v2.1.0`.
+- [ ] Submit `plugin/` at platform.claude.com/plugins/submit (owner).

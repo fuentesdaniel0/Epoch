@@ -30,21 +30,17 @@ This file documents the active state, current configurations, code graph, and ve
 
 ```mermaid
 graph TD
-    Root["/"]
-    Claude["CLAUDE.md"]
-    Engine[".claude/ (rules, skills, settings)"]
-    Memory[".agents/memory/ (context, backlog, changelog)"]
-    Template["template/ (pristine CLAUDE.md + .claude + .agents/memory)"]
+    Plugin["plugin/ (manifest 2.1.0, skills, hooks, templates, evals)"]
+    Market[".claude-plugin/marketplace.json (epoch -> ./plugin)"]
+    Template["template/ (generated copy-a-folder: CLAUDE.md, .claude, .agents/memory)"]
+    Root["root dogfood: CLAUDE.md, .claude/, .agents/memory/"]
     Scripts["scripts/ (sync-templates, create-workspace)"]
-    Eval["EVALUATION.md"]
-    Root --> Claude
-    Root --> Engine
-    Root --> Memory
-    Root --> Template
-    Root --> Scripts
-    Root --> Eval
-    Template -. sync-templates.py .-> Claude
-    Template -. sync-templates.py .-> Engine
+    Plugin -- "sync: templates -> skills (generated section)" --> Plugin
+    Plugin -- "sync: skills + memory" --> Template
+    Template -- "sync: engine only; memory never overwritten" --> Root
+    Plugin -- "sync: skills" --> Root
+    Template -- "create-workspace.py" --> NewProject["new project"]
+    Market --> Plugin
 ```
 
 ### Module Descriptions
@@ -71,7 +67,9 @@ graph TD
 ```bash
 npx --yes markdownlint-cli2 "**/*.md" "#node_modules"
 python3 scripts/sync-templates.py
-git diff --quiet -- CLAUDE.md .claude
+diff -r plugin/skills .claude/skills && diff -r plugin/skills template/.claude/skills && diff -r plugin/templates/memory template/.agents/memory && diff template/CLAUDE.md CLAUDE.md
+claude plugin validate --strict ./plugin
+claude plugin validate --strict .
 ```
 
 ---

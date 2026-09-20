@@ -1,10 +1,19 @@
 ---
 name: milestone
-description: Record a completed milestone with a dated changelog entry and a commit, without the full checkpoint ceremony. Use when the user says "log a milestone", "record that we finished X", "note this in the changelog", "mark X done", or invokes /milestone <description>. Cheap and fast; no verification, no interview.
+description: Record a completed milestone with a dated changelog entry and a commit, without the full checkpoint ceremony. Use when the user says "log a milestone", "record that we finished X", "note this in the changelog", "mark X done", or invokes /epoch:milestone <description>. Cheap and fast; no verification, no interview.
 argument-hint: [description of the milestone]
 ---
 
 # Milestone Capture
+
+> Invoked as `/epoch:milestone` from the Epoch plugin, or `/milestone` from a per-repo copy of this skill. The steps are identical.
+
+Workspace memory: !`[ -f .agents/memory/context.md ] && echo present || echo ABSENT`
+
+## 0. Precondition: Epoch workspace required
+
+- If the line above says `ABSENT`, stop immediately. Reply: *"This directory is not an Epoch workspace (no `.agents/memory/context.md`). Run `/epoch:plan` to bootstrap it first."* Do **not** create memory files, do **not** guess state, and do **not** commit anything.
+- If it says `present`, continue.
 
 Today's date: !`date +%Y-%m-%d`
 
@@ -19,7 +28,7 @@ If no description was given, ask the user for a one-line description, then stop 
 
 ```markdown
 ### Milestone (YYYY-MM-DD): <description>
-*   **Accomplishment**: <one or two sentences, expanded from the description and your knowledge of this session's work>
+* **Accomplishment**: <one or two sentences, expanded from the description and your knowledge of this session's work>
 ```
 
 Use today's date shown above. Keep the entry short; this is a marker, not a sprint narrative.
@@ -48,4 +57,4 @@ One short confirmation: the entry appended, whether a roadmap item was checked o
 - Do **not** update the Session Focus, `context.md`, or migrate active backlog tasks.
 - Do **not** rotate or archive the changelog.
 
-Those are `/checkpoint`'s job. Keeping this skill cheap is what makes it get used.
+Those are `/epoch:checkpoint`'s job. Keeping this skill cheap is what makes it get used.

@@ -9,7 +9,7 @@ When operating within this repository, all AI agents must adhere to these founda
 
 ## 2. Verification-First Development
 
-- **Continuous Validation**: Do not wait for the final `/checkpoint` skill to verify your code. Run the appropriate build commands, type checkers (e.g., `npx tsc`), or test suites with `Bash` immediately after completing a logical chunk of work. The project's canonical commands are listed under `## Verification Commands` in `.agents/memory/context.md`.
+- **Continuous Validation**: Do not wait for the final `/epoch:checkpoint` (or `/checkpoint`) skill to verify your code. Run the appropriate build commands, type checkers (e.g., `npx tsc`), or test suites with `Bash` immediately after completing a logical chunk of work. The project's canonical commands are listed under `## Verification Commands` in `.agents/memory/context.md`.
 - **Proof of Success**: Provide the developer with concrete proof (e.g., test output logs or build success messages) before declaring a task completed.
 
 ## 3. Atomic Decompositions

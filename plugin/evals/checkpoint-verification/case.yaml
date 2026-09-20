@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: checkpoint-verification
+tags: [checkpoint]
+context:
+  scaffold_script: fixture.sh

@@ -1,0 +1,14 @@
+{
+  "name": "epoch",
+  "displayName": "Epoch",
+  "version": "2.1.0",
+  "description": "Session-lifecycle memory protocol: init, plan, checkpoint, milestone. Persistent project state in versioned markdown under .agents/memory/, self-bootstrapping in any directory.",
+  "author": {
+    "name": "Daniel Fuentes",
+    "url": "https://github.com/fuentesdaniel0"
+  },
+  "homepage": "https://github.com/fuentesdaniel0/Epoch",
+  "repository": "https://github.com/fuentesdaniel0/Epoch",
+  "license": "MIT",
+  "keywords": ["memory", "context", "session", "checkpoint", "backlog", "changelog", "workflow", "planning"]
+}

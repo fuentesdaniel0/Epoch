@@ -12,3 +12,6 @@ __pycache__/
 .env
 *.log
 .securecoder/
+
+# Plugin eval run output
+plugin/evals/results/
